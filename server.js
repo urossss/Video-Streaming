@@ -220,7 +220,7 @@ const tvshowList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
         return data;
     });
 
-console.log(tvshowList);
+// console.log(tvshowList);
 // console.log(tvshowEpisodes);
 
 if (subtitlesConvertList.length > 0) {
@@ -273,15 +273,28 @@ app.get('/', (req, res) => {
 });
 
 app.get('/movies', (req, res) => {
-    res.sendFile(htmlRoot + 'movies.html');
+    res.sendFile(htmlRoot + 'posters.html');
+});
+
+app.get('/tv-shows', (req, res) => {
+    res.sendFile(htmlRoot + 'posters.html');
+});
+
+app.get('/movie-list', (req, res) => {
+    res.json(movieList);
+});
+
+app.get('/tv-show-list', (req, res) => {
+    res.json(tvshowList);
 });
 
 app.get('/movies/:id', (req, res) => {
-    res.sendFile(htmlRoot + 'video.html');
-});
-
-app.get('/series', (req, res) => {
-    res.sendFile(htmlRoot + 'series.html');
+    let id = req.params['id'];
+    if (id in movieIndexMap) {
+        res.sendFile(htmlRoot + 'video.html');
+    } else {
+        res.sendFile(htmlRoot + '404.html');
+    }
 });
 
 app.get('/video-details', (req, res) => {
@@ -330,10 +343,6 @@ app.get('/subtitles/:name', (req, res) => {
     var subtitlesPath = req.params['name'];
     var subtitlesFullPath = libraryRoot + subtitlesPath;
     res.sendFile(subtitlesFullPath);
-});
-
-app.get('/movie-list', (req, res) => {
-    res.json(movieList);
 });
 
 app.get('/test', (req, res) => {
@@ -391,6 +400,10 @@ app.get('/test', (req, res) => {
 
 app.get('/favicon.ico', (req, res) => {
     res.sendFile(__dirname + '/assets/img/favicon.ico');
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(htmlRoot + '404.html');
 });
 
 app.listen(port, '0.0.0.0', () => console.log(`Server started at http://localhost:${port}`));
