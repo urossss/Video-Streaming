@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Video-Streaming</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+
+  <style>
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 0 4px;
+      margin: auto;
+      justify-content: center;
+    }
+
+    .movie {
+      padding: 15px 15px 15px 15px;
+      cursor: pointer;
+    }
+
+    .movie .title {
+      width: 200px;
+      padding: 5px 5px 5px 5px;
+      color: white;
+      word-wrap: break-word;
+    }
+
+    .movie:hover {
+      text-decoration: none;
+      opacity: 0.6;
+    }
+
+    .poster {
+      width: 200px;
+      height: 300px;
+    }
+
+    .filler1 {
+      padding: 10px 10px 10px 10px;
+    }
+
+    .filler2 {
+      width: 200px;
+    }
+
+    .custom-container {
+      margin-left: 20%;
+      margin-right: 20%;
+    }
+
+    @media screen and (max-width: 599px) {
+      .custom-container {
+        margin-left: 5%;
+        margin-right: 5%;
+      }
+    }
+
+    @media screen and (min-width: 600px) and (max-width: 767px) {
+      .custom-container {
+        margin-left: 10%;
+        margin-right: 10%;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 991px) {
+      .custom-container {
+        margin-left: 15%;
+        margin-right: 15%;
+      }
+    }
+  </style>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+    $.getJSON('/movie-list', movies => {
+      console.log(movies);
+      let movieListDiv = document.getElementById('movieList');
+
+      movies.forEach(movie => {
+        let movieDiv = document.createElement('a');
+        movieDiv.setAttribute('class', 'movie');
+        movieDiv.setAttribute('href', '/movies/' + movie.url);
+
+        let poster = document.createElement('img');
+        poster.setAttribute('class', 'poster');
+        if (movie.hasDetails) {
+          poster.setAttribute('src', movie.details.poster);
+        }
+        movieDiv.appendChild(poster);
+
+        movieDiv.insertAdjacentHTML('beforeend', '<br/><h6 class="title" ">' + movie.name + '</h6>');
+        movieListDiv.appendChild(movieDiv);
+      });
+
+      for (let i = 0; i < 15; i++) {
+        let filler1 = document.createElement('div');
+        filler1.setAttribute('class', 'filler1');
+        let filler2 = document.createElement('div');
+        filler2.setAttribute('class', 'filler2');
+        filler1.appendChild(filler2);
+        movieListDiv.appendChild(filler1);
+      }
+    });
+  </script>
+</head>
+
+<body>
+
+  <div class="custom-container"
+    style="text-align: center; justify-content: center; margin-top: 50px;">
+    <div class="list" id="movieList"></div>
+  </div>
+
+</body>
+
+</html>
