@@ -129,7 +129,8 @@ console.log('\n\nEND\n\n');
 let tvshowIndexMap = [];
 let tvshowIndex = 0;
 
-const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
+let tvshowEpisodes = [];
+const tvshowList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
     .filter(dir => {
         return dir.isDirectory();
     })
@@ -149,12 +150,16 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
 
         let curPath = tvshowsRoot + name + '/';
 
-        let detailsPath = curPath + name + '.info';
-        data.hasDetails = fs.existsSync(detailsPath);
+        let infoPath = curPath + name + '.info';
+        let episodesPath = curPath + name + '.episodes';
+
+        data.hasDetails = fs.existsSync(infoPath) && fs.existsSync(episodesPath);
         if (data.hasDetails) {
-            data.details = JSON.parse(fs.readFileSync(detailsPath));
+            data.details = JSON.parse(fs.readFileSync(infoPath));
+            tvshowEpisodes[name] = JSON.parse(fs.readFileSync(episodesPath));
         } else {
-            let details = null;
+            let generalData = null;
+            let episodesData = null;
             imdb.get({ name: name }, { apiKey: config.IMDB_API_KEY })
                 .then((imdbData) => {
                     if (imdbData.series != true) {
@@ -163,7 +168,7 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                         return;
                     }
 
-                    details = imdbData;
+                    generalData = imdbData;
                     return imdbData.episodes();
                 })
                 .then((episodes) => {
@@ -172,11 +177,11 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                     // console.log(episodes[0]);
                     // console.log(episodes[0].season);
 
-                    let seasonCount = details.totalseasons;
+                    let seasonCount = generalData.totalseasons;
 
-                    details.episodes = [];
+                    episodesData = [];
                     for (let i = 0; i < seasonCount; i++) {
-                        details.episodes.push([]);
+                        episodesData.push([]);
                     }
 
                     let finished = 0;
@@ -184,7 +189,7 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                     for (let i = 0; i < episodes.length; i++) {
                         let s = episodes[i].season;
                         let e = episodes[i].episode;
-                        details.episodes[s - 1].push({});
+                        episodesData[s - 1].push({});
 
                         rapidapiOptions.qs.i = episodes[i].imdbid;
 
@@ -194,13 +199,14 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                                 return;
                             }
 
-                            details.episodes[s - 1][e - 1] = JSON.parse(body);
+                            episodesData[s - 1][e - 1] = JSON.parse(body);
                             finished++;
 
                             if (finished == episodes.length) {
-                                details._episodes = null;
-                                data.details = details;
-                                fs.writeFileSync(detailsPath, JSON.stringify(data.details));
+                                generalData._episodes = null;
+                                fs.writeFileSync(infoPath, JSON.stringify(generalData));
+                                fs.writeFileSync(episodesPath, JSON.stringify(episodesData));
+                                data.details = generalData;
                                 data.hasDetails = true;
                             }
                         });
@@ -211,17 +217,11 @@ const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                 });
         }
 
-        // let test = fs.readdirSync(tvshowsRoot + dir.name, { withFileTypes: true })
-        //     .filter(dir => {
-        //         if (!dir.isDirectory()) {
-        //             return false;
-        //         }
-        //     });
-
         return data;
     });
 
-//console.log(tvshowsList);
+console.log(tvshowList);
+// console.log(tvshowEpisodes);
 
 if (subtitlesConvertList.length > 0) {
     console.log('Starting conversion for ' + subtitlesConvertList.length + ' subtitles');
