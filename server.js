@@ -33,13 +33,28 @@ const transloaditOptions = {
     }
 };
 /****************************************************************************************/
+const request = require('request');
+
+const rapidapiOptions = {
+    method: 'GET',
+    url: 'https://movie-database-imdb-alternative.p.rapidapi.com/',
+    qs: { i: '', r: 'json' },
+    headers: {
+        'x-rapidapi-key': config.RAPIDAPI_KEY,
+        'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
+        useQueryString: true
+    }
+};
+/****************************************************************************************/
+
+/****************************************************************************************/
 
 
-const htmlRoot =  __dirname + '/assets/html/';
+const htmlRoot = __dirname + '/assets/html/';
 
 const libraryRoot = config.LIBRARY_ROOT;
 const moviesRoot = libraryRoot + 'Movies/';
-const seriesRoot = libraryRoot + 'TV Shows/';
+const tvshowsRoot = libraryRoot + 'TV Shows/';
 
 let movieIndexMap = [];
 let movieIndex = 0;
@@ -95,11 +110,12 @@ const movieList = fs.readdirSync(moviesRoot, { withFileTypes: true })
         if (data.hasDetails) {
             data.details = JSON.parse(fs.readFileSync(detailsPath));
         } else {
-            imdb.get({ name: movieName }, { apiKey: config.IMDB_API_KEY }).then((imdbData) => {
-                data.details = imdbData;
-                data.hasDetails = true;
-                fs.writeFileSync(detailsPath, JSON.stringify(data.details));
-            })
+            imdb.get({ name: movieName }, { apiKey: config.IMDB_API_KEY })
+                .then((imdbData) => {
+                    data.details = imdbData;
+                    data.hasDetails = true;
+                    fs.writeFileSync(detailsPath, JSON.stringify(data.details));
+                })
                 .catch((err) => {
                     console.log(err);
                 });
@@ -107,6 +123,105 @@ const movieList = fs.readdirSync(moviesRoot, { withFileTypes: true })
 
         return data;
     });
+
+console.log('\n\nEND\n\n');
+
+let tvshowIndexMap = [];
+let tvshowIndex = 0;
+
+const tvshowsList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
+    .filter(dir => {
+        return dir.isDirectory();
+    })
+    .map(dir => {
+        let data = {};
+
+        let name = dir.name;
+        data.name = name;
+
+        let url = name.toLowerCase();
+        url = url.replace(/ /g, '-');
+        data.url = url;
+
+        let ind = tvshowIndex++;
+        tvshowIndexMap[url] = ind;
+        data.index = ind;
+
+        let curPath = tvshowsRoot + name + '/';
+
+        let detailsPath = curPath + name + '.info';
+        data.hasDetails = fs.existsSync(detailsPath);
+        if (data.hasDetails) {
+            data.details = JSON.parse(fs.readFileSync(detailsPath));
+        } else {
+            let details = null;
+            imdb.get({ name: name }, { apiKey: config.IMDB_API_KEY })
+                .then((imdbData) => {
+                    if (imdbData.series != true) {
+                        console.warn('\'' + name + '\' is not a TV Show!');
+                        // console.log(imdbData);
+                        return;
+                    }
+
+                    details = imdbData;
+                    return imdbData.episodes();
+                })
+                .then((episodes) => {
+                    // console.log(episodes);
+                    // console.log(episodes.length);
+                    // console.log(episodes[0]);
+                    // console.log(episodes[0].season);
+
+                    let seasonCount = details.totalseasons;
+
+                    details.episodes = [];
+                    for (let i = 0; i < seasonCount; i++) {
+                        details.episodes.push([]);
+                    }
+
+                    let finished = 0;
+
+                    for (let i = 0; i < episodes.length; i++) {
+                        let s = episodes[i].season;
+                        let e = episodes[i].episode;
+                        details.episodes[s - 1].push({});
+
+                        rapidapiOptions.qs.i = episodes[i].imdbid;
+
+                        request(rapidapiOptions, function (err, res, body) {
+                            if (err) {
+                                console.err(err);
+                                return;
+                            }
+
+                            details.episodes[s - 1][e - 1] = JSON.parse(body);
+                            finished++;
+
+                            if (finished == episodes.length) {
+                                details._episodes = null;
+                                data.details = details;
+                                fs.writeFileSync(detailsPath, JSON.stringify(data.details));
+                                data.hasDetails = true;
+                            }
+                        });
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+
+        // let test = fs.readdirSync(tvshowsRoot + dir.name, { withFileTypes: true })
+        //     .filter(dir => {
+        //         if (!dir.isDirectory()) {
+        //             return false;
+        //         }
+        //     });
+
+        return data;
+    });
+
+//console.log(tvshowsList);
 
 if (subtitlesConvertList.length > 0) {
     console.log('Starting conversion for ' + subtitlesConvertList.length + ' subtitles');
