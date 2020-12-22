@@ -47,7 +47,8 @@ const rapidapiOptions = {
 };
 /****************************************************************************************/
 
-/****************************************************************************************/
+
+app.use('/assets', express.static(__dirname + '/assets'));
 
 
 const htmlRoot = __dirname + '/assets/html/';
@@ -346,60 +347,7 @@ app.get('/subtitles/:name', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-    // imdb.get({ name: 'The Office' }, { apiKey: config.IMDB_API_KEY }).then((result) => {
-    //     // console.log(results);
-    //     // fs.writeFileSync(libraryRoot + 'The Office.info', JSON.stringify(results));
-    //     return result.episodes();
-    // }).then((episodes) => {
-    //     // console.log(episodes);
-    //     fs.writeFileSync(libraryRoot + 'The Office.episodes', JSON.stringify(episodes));
-    // }).catch((err) => {
-    //     console.log(err);
-    // });
-
-
-    // // Upload srt file
-    // transloadit.addFile('srt_file', moviesRoot + '1917 (2019)/1917 (2019).srt')
-
-    // // Start the Assembly to convert to vtt
-    // transloadit.createAssembly(transloaditOptions, (err, result) => {
-    //     if (err) {
-    //         console.log(err);
-    //     } else {
-    //         let endpoint = result.status_endpoint;
-
-    //         //let retryCount = 10;
-    //         let done = false;
-    //         let interval = setInterval(function () {
-    //             console.log('fetch');
-    //             //retryCount--;
-    //             fetch(endpoint, { method: 'Get' })
-    //                 .then(res => res.json())
-    //                 .then(json => {
-    //                     if (json.ok == "ASSEMBLY_COMPLETED" && !done) {
-    //                         done = true;
-    //                         clearInterval(interval);
-    //                         console.log('SUCCESS');
-
-    //                         let vttUrl = json.results.converted[0].url;
-    //                         console.log(vttUrl);
-
-    //                         fetch(vttUrl)
-    //                             .then(res => res.text())
-    //                             .then(text => {
-    //                                 fs.writeFileSync('test.vtt', text);
-    //                             });
-    //                     }
-    //                 });
-    //         }, 500);
-    //     }
-    // });
-
     res.sendFile(htmlRoot + 'test.html');
-});
-
-app.get('/favicon.ico', (req, res) => {
-    res.sendFile(__dirname + '/assets/img/favicon.ico');
 });
 
 app.get('*', (req, res) => {
