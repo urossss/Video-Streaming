@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Video-Streaming</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
+
+    <link rel="stylesheet" href="assets/css/posters.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="/assets/js/posters-util.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $.getJSON('/tv-show-details', {
+                url: document.URL
+            },
+                res => {
+                    if (!res.valid) {
+                        window.location.replace('/');
+                        return;
+                    }
+
+                    let details = res.details;
+                    console.log(details);
+
+                    let titleElement = document.getElementById('title');
+                    titleElement.insertAdjacentHTML('beforeend', details.title + '&nbsp');
+
+                    let yearElement = document.getElementById('year');
+                    yearElement.insertAdjacentHTML('beforeend', '(' + details._yearData + ')');
+
+                    let posterElement = document.getElementById('poster');
+                    if (details.poster) {
+                        posterElement.setAttribute('src', details.poster);
+                    } else {
+                        posterElement.setAttribute('src', '/assets/img/no-poster.png');
+                    }
+
+                    let plotElement = document.getElementById('plot');
+                    plotElement.insertAdjacentHTML('beforeend', '<br>' + details.plot + '<br>');
+
+                    let writerElement = document.getElementById('writer');
+                    writerElement.insertAdjacentHTML('beforeend', details.writer);
+
+                    let genreElement = document.getElementById('genre');
+                    genreElement.insertAdjacentHTML('beforeend', details.genres);
+
+                    let castElement = document.getElementById('cast');
+                    castElement.insertAdjacentHTML('beforeend', details.actors);
+
+                    let episodesElement = document.getElementById('episodes');
+                    episodesElement.insertAdjacentHTML('beforeend', details.totalepisodes);
+
+                    let durationElement = document.getElementById('duration');
+                    let duration = parseInt(details.runtime);
+                    let hours = Math.floor(duration / 60), minutes = duration % 60;
+                    durationElement.insertAdjacentHTML('beforeend', (hours ? hours + 'h ' : '') + (minutes ? minutes + 'min' : ''));
+
+                    let ratedElement = document.getElementById('rated');
+                    ratedElement.insertAdjacentHTML('beforeend', details.rated);
+
+                    let ratingElement = document.getElementById('rating');
+                    ratingElement.insertAdjacentHTML('beforeend', details.rating);
+
+                    let contentElement = document.getElementById('content');
+                    let posters = [];
+                    for (let i = 1; i <= details.totalseasons; i++) {
+                        let url = 'season-' + i;
+                        let firstRow = 'Season ' + i;
+                        let secondRow = details.seasonsdata[i - 1].episodes + ' episode' + (details.seasonsdata[i - 1].episodes > 1 ? 's' : '');
+                        let poster = details.seasonsdata[i - 1].poster;
+
+                        posters.push({
+                            url: url,
+                            details: {
+                                type: 'season',
+                                poster: poster,
+                                firstRow: firstRow,
+                                secondRow: secondRow
+                            }
+                        });
+                    }
+                    let posterListElement = document.getElementById('posterList');
+                    showPosters(posterListElement, posters, document.URL + '/');
+                });
+        });
+    </script>
+</head>
+
+<body>
+
+    <div class="container" style="margin-top: 60px;">
+        <div style="display:inline;">
+            <h2 id="title" style="display:inline;"></h2>
+            <h4 id="year" style="display:inline;"></h4>
+        </div>
+        <div class="container" id="content">
+            <br>
+            <span style="font-size: small">
+                <span id="duration"></span>
+                &nbsp&nbsp&nbsp&nbsp<span class="text-muted">|</span>&nbsp&nbsp&nbsp&nbsp
+                <span id="rated"></span>
+                &nbsp&nbsp&nbsp&nbsp<span class="text-muted">|</span>&nbsp&nbsp&nbsp&nbsp
+                <span id="rating"></span>
+            </span>
+            <br><br><br>
+            <div class="row">
+                <img class="col-12 col-md-5 col-lg-3" id="poster">
+                <table class="col-12 col-md-7 col-lg-9 center">
+                    <tbody>
+                        <tr>
+                            <td colspan="2" id="plot"></td>
+                        </tr>
+                        <tr height="20px">
+                        <tr>
+                            <td class="text-muted" style="width: 30%;">WRITTEN BY</td>
+                            <td id="writer"></td>
+                        </tr>
+                        <tr height="10px">
+                        <tr>
+                            <td class="text-muted">GENRE</td>
+                            <td id="genre"></td>
+                        </tr>
+                        <tr height="10px">
+                        <tr>
+                            <td class="text-muted">CAST</td>
+                            <td id="cast"></td>
+                        </tr>
+                        <tr height="10px">
+                        <tr>
+                            <td class="text-muted">EPISODES</td>
+                            <td id="episodes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="custom-container-2">
+                <div class="poster-list" id="posterList"></div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

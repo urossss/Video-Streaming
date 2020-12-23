@@ -13,7 +13,7 @@
 
 .poster-div .title {
     width: 200px;
-    padding: 5px 5px 5px 5px;
+    padding: 10px 5px 0px 5px;
     color: white;
     word-wrap: break-word;
 }
@@ -29,7 +29,7 @@
 }
 
 .filler1 {
-    padding: 10px 10px 10px 10px;
+    padding: 15px 15px 15px 15px;
 }
 
 .filler2 {
@@ -42,6 +42,12 @@
     margin-top: 50px;
     margin-left: 20%;
     margin-right: 20%;
+}
+
+.custom-container-2 {
+    text-align: center;
+    justify-content: center;
+    margin-top: 80px;
 }
 
 @media screen and (max-width: 599px) {

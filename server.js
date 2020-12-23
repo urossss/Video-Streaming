@@ -205,6 +205,16 @@ const tvshowList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
 
                             if (finished == episodes.length) {
                                 generalData._episodes = null;
+                                generalData.totalepisodes = episodes.length;
+                                let seasonsData = [];
+                                for (let i = 0; i < seasonCount; i++) {
+                                    let data = {};
+                                    data.episodes = episodesData[i].length;
+                                    let randomPoster = Math.floor(Math.random() * data.episodes);
+                                    data.poster = episodesData[i][randomPoster].Poster;
+                                    seasonsData.push(data);
+                                }
+                                generalData.seasonsdata = seasonsData;
                                 fs.writeFileSync(infoPath, JSON.stringify(generalData));
                                 fs.writeFileSync(episodesPath, JSON.stringify(episodesData));
                                 data.details = generalData;
@@ -298,6 +308,42 @@ app.get('/movies/:id', (req, res) => {
     }
 });
 
+app.get('/tv-shows/:id', (req, res) => {
+    let id = req.params['id'];
+    if (id in tvshowIndexMap) {
+        res.sendFile(htmlRoot + 'tv-show.html');
+    } else {
+        res.sendFile(htmlRoot + '404.html');
+    }
+});
+
+app.get('/tv-show-details', (req, res) => {
+    let url = req.query['url'];
+    let parts = url.split('/');
+    let link = parts[4];
+    if (link in tvshowIndexMap) {
+        let ind = tvshowIndexMap[link];
+        let data = tvshowList[ind];
+        if (!data.hasDetails) {
+            res.json({
+                valid: false,
+                description: 'No data available'
+            });
+        } else {
+            res.json({
+                valid: true,
+                details: data.details
+            });
+        }
+    } else {
+        res.json({
+            valid: false,
+            description: 'Unknown tv show url'
+        });
+    }
+
+});
+
 app.get('/video-details', (req, res) => {
     let url = req.query['url'];
     let parts = url.split('/');
@@ -350,7 +396,12 @@ app.get('/test', (req, res) => {
     res.sendFile(htmlRoot + 'test.html');
 });
 
+app.get('/favicon.ico', (req, res) => {
+    res.sendFile(__dirname + '/assets/img/favicon.ico');
+});
+
 app.get('*', (req, res) => {
+    console.log('default route');
     res.sendFile(htmlRoot + '404.html');
 });
 

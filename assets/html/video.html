@@ -42,7 +42,11 @@
                         yearElement.insertAdjacentHTML('beforeend', '(' + video.details.year + ')');
 
                         let posterElement = document.getElementById('poster');
-                        posterElement.setAttribute('src', video.details.poster);
+                        if (video.details.poster) {
+                            posterElement.setAttribute('src', video.details.poster);
+                        } else {
+                            posterImg.setAttribute('src', '/assets/img/no-poster.png');
+                        }
 
                         let plotElement = document.getElementById('plot');
                         plotElement.insertAdjacentHTML('beforeend', '<br>' + video.details.plot + '<br>');
@@ -62,7 +66,7 @@
                         let durationElement = document.getElementById('duration');
                         let duration = parseInt(video.details.runtime);
                         let hours = Math.floor(duration / 60), minutes = duration % 60;
-                        durationElement.insertAdjacentHTML('beforeend', hours + 'h ' + (minutes ? minutes + 'min' : ''));
+                        durationElement.insertAdjacentHTML('beforeend', (hours ? hours + 'h ' : '') + (minutes ? minutes + 'min' : ''));
 
                         let ratedElement = document.getElementById('rated');
                         ratedElement.insertAdjacentHTML('beforeend', video.details.rated);
