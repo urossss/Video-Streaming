@@ -64,11 +64,12 @@ let subtitlesConvertList = [];
 
 const movieList = fs.readdirSync(moviesRoot, { withFileTypes: true })
     .filter(dir => {
-        if (!dir.isDirectory()) {
-            return false;
-        }
-        let mp4Path = moviesRoot + dir.name + '/' + dir.name + '.mp4';
-        return fs.existsSync(mp4Path);
+        // if (!dir.isDirectory()) {
+        //     return false;
+        // }
+        // let mp4Path = moviesRoot + dir.name + '/' + dir.name + '.mp4';
+        // return fs.existsSync(mp4Path);
+        return dir.isDirectory();
     })
     .map(dir => {
         let data = {};
@@ -424,8 +425,17 @@ app.get('/video-details', (req, res) => {
         let link = parts[4];
         if (link in movieIndexMap) {
             let ind = movieIndexMap[link];
-            let data = movieList[ind];
-            res.send(data);
+            let video = movieList[ind];
+            let videoPath = video.videoPath.replace(/%2F/g, '/');
+            if (fs.existsSync(libraryRoot + videoPath)) {
+                res.json(video);
+                sent = true;
+            } else {
+                let tmp = video.videoPath;
+                video.videoPath = null;
+                res.json(video);
+                video.videoPath = tmp;
+            }
             sent = true;
         }
     } else if (parts[3] == 'tv-shows') { // series
@@ -441,13 +451,11 @@ app.get('/video-details', (req, res) => {
                     if (((season | 0) === season) && ((episode | 0) === episode)) {
                         if (season > 0 && season <= tvshowList[ind].details.totalseasons &&
                             episode > 0 && episode <= tvshowList[ind].details.seasonsdata[season - 1].episodes) {
-
-                            console.log('sent');
                             sent = true;
                             let videoPath = 'TV Shows/' + tvshowList[ind].name + '/Season ' + season + '/' +
                                 'S' + (season < 10 ? '0' : '') + season +
                                 'E' + (episode < 10 ? '0' : '') + episode + '.mp4';
-                            
+
                             if (fs.existsSync(libraryRoot + videoPath)) {
                                 videoPath = videoPath.replace(/\//g, '%2F');
                             } else {
@@ -460,7 +468,6 @@ app.get('/video-details', (req, res) => {
                                 hasDetails: true,
                                 details: tvshowEpisodes[link][season - 1][episode - 1]
                             };
-                            console.log(videoPath);
                             res.json(video);
                         }
                     }

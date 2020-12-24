@@ -7,17 +7,23 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
             let videoPlayer = document.getElementById('videoPlayer');
 
-            let videoSource = document.createElement('source');
-            videoSource.setAttribute('type', 'video/mp4');
-            videoSource.setAttribute('src', '/video/' + video.videoPath);
-            videoPlayer.appendChild(videoSource);
+            if (video.videoPath) {
+                let videoSource = document.createElement('source');
+                videoSource.setAttribute('type', 'video/mp4');
+                videoSource.setAttribute('src', '/video/' + video.videoPath);
+                videoPlayer.appendChild(videoSource);
 
-            if (video.hasVtt) {
-                let subtitlesTrack = document.createElement('track');
-                subtitlesTrack.setAttribute('kind', 'subtitles');
-                subtitlesTrack.setAttribute('label', 'Default');
-                subtitlesTrack.setAttribute('src', '/subtitles/' + video.subtitlesPath);
-                videoPlayer.appendChild(subtitlesTrack);
+                if (video.hasVtt) {
+                    let subtitlesTrack = document.createElement('track');
+                    subtitlesTrack.setAttribute('kind', 'subtitles');
+                    subtitlesTrack.setAttribute('label', 'Default');
+                    subtitlesTrack.setAttribute('src', '/subtitles/' + video.subtitlesPath);
+                    videoPlayer.appendChild(subtitlesTrack);
+                }
+                
+                document.getElementById('inner-container').removeChild(document.getElementById('videoNotFound'));
+            } else {
+                document.getElementById('inner-container').removeChild(videoPlayer);
             }
 
             if (video.hasDetails) {
@@ -62,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     yearElement.style.visibility = 'hidden';
 
                     let se = 'S' + (d.Season < 10 ? '0' : '') + d.Season +
-                            'E' + (d.Episode < 10 ? '0' : '') + d.Episode + '<span class="text-muted"> | </span>';
+                        'E' + (d.Episode < 10 ? '0' : '') + d.Episode + '<span class="text-muted"> | </span>';
                     let seElement = document.getElementById('season-episode');
                     seElement.insertAdjacentHTML('beforeend', se);
                 } else {
