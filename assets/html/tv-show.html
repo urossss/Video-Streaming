@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.min.css">
 
     <link rel="stylesheet" href="assets/css/posters.css">
+    <link rel="stylesheet" href="assets/css/video.css">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -34,35 +35,33 @@
                 <span id="rating"></span>
             </span>
             <br><br><br>
-            <div class="row">
-                <img class="col-12 col-md-5 col-lg-3" id="poster">
-                <table class="col-12 col-md-7 col-lg-9 center">
-                    <tbody>
-                        <tr>
-                            <td colspan="2" id="plot"></td>
-                        </tr>
-                        <tr height="20px">
-                        <tr>
-                            <td class="text-muted" style="width: 30%;">WRITTEN BY</td>
-                            <td id="writer"></td>
-                        </tr>
-                        <tr height="10px">
-                        <tr>
-                            <td class="text-muted">GENRE</td>
-                            <td id="genre"></td>
-                        </tr>
-                        <tr height="10px">
-                        <tr>
-                            <td class="text-muted">CAST</td>
-                            <td id="cast"></td>
-                        </tr>
-                        <tr height="10px">
-                        <tr>
-                            <td class="text-muted">EPISODES</td>
-                            <td id="episodes"></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div id="inlineBlock">
+                <div id="posterDiv" class="col-12 col-lg-4">
+                    <img class="main-poster" id="poster">
+                </div>
+                <div id="detailsDiv" class="col-12 col-lg-7">
+                    <div>
+                        <div colspan="2" id="plot" class=""></div>
+                    </div>
+                    <div height="20px">
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="text-muted col-3" style="width: 30%;">WRITTEN BY</div>
+                            <div id="writer" class="col-9"></div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="text-muted col-3">GENRE</div>
+                            <div id="genre" class="col-9"></div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="text-muted col-3">CAST</div>
+                            <div id="cast" class="col-9"></div>
+                        </div>
+                        <div class="row" style="margin-top: 10px;">
+                            <div class="text-muted col-3">EPISODES</div>
+                            <div id="episodes" class="col-9"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="custom-container-2">
                 <div class="poster-list" id="posterList"></div>

@@ -9,10 +9,12 @@ if (urlParts[3] == 'movies') {
         posterListEndpoint = '/tv-show-list';
         urlPrefix = '/tv-shows/';
     } else {
-        posterListEndpoint = '/episode-list/' + urlParts[4] + '%2F' + urlParts[5];
+        posterListEndpoint = '/episode-list/' + urlParts[4] + '/' + urlParts[5];
         urlPrefix = '/tv-shows/' + urlParts[4] + '/';
     }
 }
+
+console.log(posterListEndpoint);
 
 $.getJSON(posterListEndpoint, list => {
     console.log('showing posters');

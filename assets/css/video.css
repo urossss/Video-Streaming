@@ -1,0 +1,33 @@
+:root {
+    --width-lg: 240px;
+    --height-lg: 360px;
+
+    --width-horizontal-lg: 360px;
+    --height-horizontal-lg: 240px;
+
+    --width-vertical-lg: 240px;
+    --height-vertical-lg: 360px;
+}
+
+.main-poster {
+    width: var(--width-lg);
+    height: var(--height-lg);
+    object-fit: cover;
+    display: inline-block;
+}
+
+#posterDiv {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 10px 10px 10px 10px;
+}
+
+#detailsDiv {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#videoPlayer {
+    width: 100%;
+    margin-top: 50px;
+}

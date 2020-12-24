@@ -1,3 +1,14 @@
+:root {
+    --width: 200px;
+    --height: 300px;
+
+    --width-horizontal: 300px;
+    --height-horizontal: 200px;
+
+    --width-vertical: 200px;
+    --height-vertical: 300px;
+}
+
 .poster-list {
     display: flex;
     flex-wrap: wrap;
@@ -12,7 +23,7 @@
 }
 
 .poster-div .title {
-    width: 200px;
+    width: var(--width);
     padding: 10px 5px 0px 5px;
     color: white;
     word-wrap: break-word;
@@ -24,8 +35,9 @@
 }
 
 .poster-img {
-    width: 200px;
-    height: 300px;
+    width: var(--width);
+    height: var(--height);
+    object-fit: cover;
 }
 
 .filler1 {
@@ -33,7 +45,7 @@
 }
 
 .filler2 {
-    width: 200px;
+    width: var(--width);
 }
 
 .custom-container {

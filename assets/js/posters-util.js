@@ -8,24 +8,32 @@ function showPosters(posterListElement, posters, urlPrefix) {
 
         let posterImg = document.createElement('img');
         posterImg.setAttribute('class', 'poster-img');
-        posterImg.setAttribute('style', 'object-fit: cover;');
-        if (poster.details && poster.details.poster) {
-            posterImg.setAttribute('src', poster.details.poster);
+        let posterUrl = poster.details.poster ?? poster.details.Poster;
+        if (posterUrl) {
+            posterImg.setAttribute('src', posterUrl);
         } else {
             posterImg.setAttribute('src', '/assets/img/no-poster.png');
         }
         posterDiv.appendChild(posterImg);
 
         var firstRow, secondRow;
-        if (poster.details.type == 'movie') {
+        let type = poster.details.type ?? poster.details.Type;
+        if (type == 'movie') {
             firstRow = poster.details.title;
             secondRow = poster.details.year;
-        } else if (poster.details.type == 'series') {
+        } else if (type == 'series') {
             firstRow = poster.details.title;
             secondRow = poster.details.totalseasons + ' season' + (poster.details.totalseasons > 1 ? 's' : '');
-        } else if (poster.details.type == 'season') {
+        } else if (type == 'season') {
             firstRow = poster.details.firstRow;
             secondRow = poster.details.secondRow;
+        } else if (type == 'episode') {
+            firstRow = poster.details.Title;
+            secondRow = 'Episode ' + poster.details.Episode;
+
+            let root = document.documentElement;
+            root.style.setProperty('--width', window.getComputedStyle(document.documentElement).getPropertyValue('--width-horizontal'));
+            root.style.setProperty('--height', window.getComputedStyle(document.documentElement).getPropertyValue('--height-horizontal'));
         }
 
         posterDiv.insertAdjacentHTML('beforeend', '<br><h6 class="title">' + firstRow + '</h6>');

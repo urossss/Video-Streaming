@@ -68,6 +68,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 });
             }
             let posterListElement = document.getElementById('posterList');
-            showPosters(posterListElement, posters, document.URL + '/');
+            showPosters(posterListElement, posters, document.URL + (document.URL[document.URL.length - 1] == '/' ? '' : '/'));
         });
 });
