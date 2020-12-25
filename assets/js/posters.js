@@ -5,7 +5,7 @@ if (urlParts[3] == 'movies') {
     posterListEndpoint = '/movie-list';
     urlPrefix = '/movies/';
 } else if (urlParts[3] == 'tv-shows') {
-    if (urlParts.length == 4) {
+    if (urlParts.length == 4 || (urlParts.length == 5 && urlParts[4] == '')) {
         posterListEndpoint = '/tv-show-list';
         urlPrefix = '/tv-shows/';
     } else {

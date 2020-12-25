@@ -24,7 +24,7 @@
             <h2 id="title" style="display: inline;"></h2>
             <h4 id="year" style="display: inline;"></h4>
         </div>
-        <div class="container" id="inner-container">
+        <div class="container">
             <br>
             <span style="font-size: small">
                 <span id="duration"></span>
@@ -66,9 +66,14 @@
                     </div>
                 </div>
             </div>
-            <video id="videoPlayer" controls disablePictureInPicture controlsList="nodownload"></video>
-            <div id="videoNotFound" style="margin-top: 50px;">
-                <img src="/assets/img/video-not-found.gif" style="width: 100%;">
+            <div id="videoDiv">
+                <video id="videoPlayer" controls disablePictureInPicture controlsList="nodownload"></video>
+                <img id="videoNotFound" src="/assets/img/video-not-found.gif" style="width: 100%;">
+                <div id="adjacentEpisodes" class="row" style="margin: 0 0 0 0;">
+                    <a class="btn-lg btn-secondary col-3" id="prevEpisode">Previous episode</a>
+                    <div class="col-6"></div>
+                    <a class="btn-lg btn-secondary col-3" id="nextEpisode">Next episode</a>
+                </div>
             </div>
         </div>
 

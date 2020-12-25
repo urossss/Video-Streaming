@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
         video => {
             console.log(video);
 
-            let videoPlayer = document.getElementById('videoPlayer');
-
             if (video.videoPath) {
+                let videoPlayer = document.getElementById('videoPlayer');
+
                 let videoSource = document.createElement('source');
                 videoSource.setAttribute('type', 'video/mp4');
                 videoSource.setAttribute('src', '/video/' + video.videoPath);
@@ -20,10 +20,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
                     subtitlesTrack.setAttribute('src', '/subtitles/' + video.subtitlesPath);
                     videoPlayer.appendChild(subtitlesTrack);
                 }
-                
-                document.getElementById('inner-container').removeChild(document.getElementById('videoNotFound'));
+
+                document.getElementById('videoDiv').removeChild(document.getElementById('videoNotFound'));
             } else {
-                document.getElementById('inner-container').removeChild(videoPlayer);
+                document.getElementById('videoDiv').removeChild(document.getElementById('videoPlayer'));
             }
 
             if (video.hasDetails) {
@@ -71,9 +71,27 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         'E' + (d.Episode < 10 ? '0' : '') + d.Episode + '<span class="text-muted"> | </span>';
                     let seElement = document.getElementById('season-episode');
                     seElement.insertAdjacentHTML('beforeend', se);
+
+                    let prevEpisodeElement = document.getElementById('prevEpisode');
+                    if (video.prevEpisode) {
+                        prevEpisodeElement.setAttribute('href', video.prevEpisode);
+                    } else {
+                        prevEpisodeElement.classList.add('disabled');
+                        prevEpisodeElement.classList.add('btn-outline-secondary');
+                    }
+
+                    let nextEpisodeElement = document.getElementById('nextEpisode');
+                    if (video.nextEpisode) {
+                        nextEpisodeElement.setAttribute('href', video.nextEpisode);
+                    } else {
+                        nextEpisodeElement.classList.add('disabled');
+                        nextEpisodeElement.classList.add('btn-outline-secondary');
+                    }
                 } else {
                     let releasedWrapper = document.getElementById('released-wrapper');
                     releasedWrapper.style.visibility = 'hidden';
+
+                    document.getElementById('videoDiv').removeChild(document.getElementById('adjacentEpisodes'));
                 }
 
                 let plotElement = document.getElementById('plot');

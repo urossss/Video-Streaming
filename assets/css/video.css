@@ -29,6 +29,24 @@
 
 #videoPlayer {
     width: 100%;
+    margin-bottom: 10px;
+}
+
+#videoNotFound {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+#videoDiv {
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+#prevEpisode, #nextEpisode {
+    text-align: center;
+    text-decoration: none;
+}
+
+#prevEpisode:hover, #nextEpisode:hover {
+    cursor: pointer;
 }

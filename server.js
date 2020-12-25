@@ -462,11 +462,50 @@ app.get('/video-details', (req, res) => {
                                 videoPath = null;
                             }
 
+                            var prevSeason, prevEpisode, nextSeason, nextEpisode;
+                            if (episode > 1) {
+                                prevSeason = season;
+                                prevEpisode = episode - 1;
+                            } else {
+                                if (season > 1) {
+                                    prevSeason = season - 1;
+                                    prevEpisode = tvshowList[ind].details.seasonsdata[prevSeason - 1].episodes;
+                                } else {
+                                    prevSeason = null;
+                                    prevEpisode = null;
+                                }
+                            }
+                            if (episode < tvshowList[ind].details.seasonsdata[season - 1].episodes) {
+                                nextSeason = season;
+                                nextEpisode = episode + 1;
+                            } else {
+                                if (season < tvshowList[ind].details.seasonsdata.length) {
+                                    nextSeason = season + 1;
+                                    nextEpisode = 1;
+                                } else {
+                                    nextSeason = null;
+                                    nextEpisode = null;
+                                }
+                            }
+                            var prev = null, next = null;
+                            if (prevSeason && prevEpisode) {
+                                prev = 'tv-shows/' + link + '/' +
+                                    's' + (prevSeason < 10 ? '0' : '') + prevSeason +
+                                    'e' + (prevEpisode < 10 ? '0' : '') + prevEpisode;
+                            }
+                            if (nextSeason && nextEpisode) {
+                                next = 'tv-shows/' + link + '/' +
+                                    's' + (nextSeason < 10 ? '0' : '') + nextSeason +
+                                    'e' + (nextEpisode < 10 ? '0' : '') + nextEpisode;
+                            }
+
                             let video = {
                                 videoPath: videoPath,
                                 hasVtt: false, // todo
                                 hasDetails: true,
-                                details: tvshowEpisodes[link][season - 1][episode - 1]
+                                details: tvshowEpisodes[link][season - 1][episode - 1],
+                                prevEpisode: prev,
+                                nextEpisode: next
                             };
                             res.json(video);
                         }
@@ -491,7 +530,7 @@ app.get('/video/:path', (req, res) => {
     const fileSize = stat.size;
     const range = req.headers.range;
     if (range) {
-        const CHUNK_SIZE = 1000000;
+        const CHUNK_SIZE = 2000000; // 2MB
         const parts = range.replace(/bytes=/, '').split('-');
         const start = parseInt(parts[0], 10);
         const end = parts[1] != '' ? parseInt(parts[1], 10) : Math.min(start + CHUNK_SIZE - 1, fileSize - 1);
@@ -515,10 +554,6 @@ app.get('/subtitles/:name', (req, res) => {
     var subtitlesPath = req.params['name'];
     var subtitlesFullPath = libraryRoot + subtitlesPath;
     res.sendFile(subtitlesFullPath);
-});
-
-app.get('/test', (req, res) => {
-    res.sendFile(htmlRoot + 'test.html');
 });
 
 app.get('/favicon.ico', (req, res) => {
