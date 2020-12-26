@@ -44,9 +44,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
                 let type = d.type ?? d.Type;
                 if (type == 'episode') {
-                    let root = document.documentElement;
-                    root.style.setProperty('--width-lg', window.getComputedStyle(document.documentElement).getPropertyValue('--width-horizontal-lg'));
-                    root.style.setProperty('--height-lg', window.getComputedStyle(document.documentElement).getPropertyValue('--height-horizontal-lg'));
+                    posterElement.classList.add('main-poster-horizontal');
 
                     let posterDiv = document.getElementById('posterDiv');
                     posterDiv.setAttribute('class', 'col-12 col-lg-5');
@@ -88,6 +86,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                         nextEpisodeElement.classList.add('btn-outline-secondary');
                     }
                 } else {
+                    posterElement.classList.add('main-poster-vertical');
+
                     let releasedWrapper = document.getElementById('released-wrapper');
                     releasedWrapper.style.visibility = 'hidden';
 
@@ -120,5 +120,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 let ratingElement = document.getElementById('rating');
                 ratingElement.insertAdjacentHTML('beforeend', d.rating ?? d.imdbRating);
             }
+
+            /**** Saving the lightweight version of the page (video.html) ****/
+            // let page = $("html").html();
+            // let ind = page.indexOf('</head>');
+            // let head = page.substr(0, ind + 7);
+            // let body = page.substr(ind + 7);
+            // head = head.substr(0, 307) + '</head>';
+            // body = body.replace(/href="/g, 'href="/lightweight');
+            // page = head + '\n' + body;
+            // let blob = new Blob([page], { type: "text/html;charset=utf-8" });
+            // let parts = document.URL.split('/');
+            // saveAs(blob, parts[parts.length - 1]);
         });
 });

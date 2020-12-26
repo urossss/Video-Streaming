@@ -1,7 +1,4 @@
 :root {
-    --width-lg: 240px;
-    --height-lg: 360px;
-
     --width-horizontal-lg: 360px;
     --height-horizontal-lg: 240px;
 
@@ -9,9 +6,16 @@
     --height-vertical-lg: 360px;
 }
 
-.main-poster {
-    width: var(--width-lg);
-    height: var(--height-lg);
+.main-poster-vertical {
+    width: var(--width-vertical-lg);
+    height: var(--height-vertical-lg);
+    object-fit: cover;
+    display: inline-block;
+}
+
+.main-poster-horizontal {
+    width: var(--width-horizontal-lg);
+    height: var(--height-horizontal-lg);
     object-fit: cover;
     display: inline-block;
 }

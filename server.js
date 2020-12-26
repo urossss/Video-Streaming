@@ -52,6 +52,7 @@ app.use('/assets', express.static(__dirname + '/assets'));
 
 
 const htmlRoot = __dirname + '/assets/html/';
+const lightweightRoot = __dirname + '/assets/lightweight/';
 
 const libraryRoot = config.LIBRARY_ROOT;
 const moviesRoot = libraryRoot + 'Movies/';
@@ -489,12 +490,12 @@ app.get('/video-details', (req, res) => {
                             }
                             var prev = null, next = null;
                             if (prevSeason && prevEpisode) {
-                                prev = 'tv-shows/' + link + '/' +
+                                prev = '/tv-shows/' + link + '/' +
                                     's' + (prevSeason < 10 ? '0' : '') + prevSeason +
                                     'e' + (prevEpisode < 10 ? '0' : '') + prevEpisode;
                             }
                             if (nextSeason && nextEpisode) {
-                                next = 'tv-shows/' + link + '/' +
+                                next = '/tv-shows/' + link + '/' +
                                     's' + (nextSeason < 10 ? '0' : '') + nextSeason +
                                     'e' + (nextEpisode < 10 ? '0' : '') + nextEpisode;
                             }
@@ -554,6 +555,49 @@ app.get('/subtitles/:name', (req, res) => {
     var subtitlesPath = req.params['name'];
     var subtitlesFullPath = libraryRoot + subtitlesPath;
     res.sendFile(subtitlesFullPath);
+});
+
+app.get('/lightweight', (req, res) => {
+    res.sendFile(lightweightRoot + 'lightweight.html');
+});
+
+app.get('/lightweight/movies', (req, res) => {
+    res.sendFile(lightweightRoot + 'movies/movies.html');
+});
+
+app.get('/lightweight/movies/:movie', (req, res) => {
+    let movie = req.params['movie'];
+    let path = lightweightRoot + 'movies/' + movie + '/' + movie + '.html';
+    if (fs.existsSync(path)) {
+        res.sendFile(path);
+    } else {
+        res.sendFile(htmlRoot + '404.html');
+    }
+});
+
+app.get('/lightweight/tv-shows', (req, res) => {
+    res.sendFile(lightweightRoot + 'tv-shows/tv-shows.html');
+});
+
+app.get('/lightweight/tv-shows/:tvshow', (req, res) => {
+    let tvshow = req.params['tvshow'];
+    let path = lightweightRoot + 'tv-shows/' + tvshow + '/' + tvshow + '.html';
+    if (fs.existsSync(path)) {
+        res.sendFile(path);
+    } else {
+        res.sendFile(htmlRoot + '404.html');
+    }
+});
+
+app.get('/lightweight/tv-shows/:tvshow/:file', (req, res) => {
+    let tvshow = req.params['tvshow'];
+    let file = req.params['file'];
+    let path = lightweightRoot + 'tv-shows/' + tvshow + '/' + file + '.html';
+    if (fs.existsSync(path)) {
+        res.sendFile(path);
+    } else {
+        res.sendFile(htmlRoot + '404.html');
+    }
 });
 
 app.get('/favicon.ico', (req, res) => {

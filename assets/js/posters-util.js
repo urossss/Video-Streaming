@@ -1,4 +1,5 @@
 function showPosters(posterListElement, posters, urlPrefix) {
+    var filler2Class;
     posters.forEach(poster => {
         let posterDiv = document.createElement('a');
         posterDiv.setAttribute('class', 'poster-div');
@@ -6,8 +7,21 @@ function showPosters(posterListElement, posters, urlPrefix) {
             posterDiv.setAttribute('href', urlPrefix + poster.url);
         }
 
+        let type = poster.details.type ?? poster.details.Type;
+
+        var posterImgClass, titleClass;
+        if (type == 'episode') {
+            posterImgClass = 'poster-img-horizontal';
+            filler2Class = 'filler2-horizontal';
+            titleClass = 'title-horizontal';
+        } else {
+            posterImgClass = 'poster-img-vertical';
+            filler2Class = 'filler2-vertical';
+            titleClass = 'title-vertical';
+        }
+
         let posterImg = document.createElement('img');
-        posterImg.setAttribute('class', 'poster-img');
+        posterImg.setAttribute('class', posterImgClass);
         let posterUrl = poster.details.poster ?? poster.details.Poster;
         if (posterUrl) {
             posterImg.setAttribute('src', posterUrl);
@@ -17,7 +31,7 @@ function showPosters(posterListElement, posters, urlPrefix) {
         posterDiv.appendChild(posterImg);
 
         var firstRow, secondRow;
-        let type = poster.details.type ?? poster.details.Type;
+
         if (type == 'movie') {
             firstRow = poster.details.title;
             secondRow = poster.details.year;
@@ -30,13 +44,9 @@ function showPosters(posterListElement, posters, urlPrefix) {
         } else if (type == 'episode') {
             firstRow = poster.details.Title;
             secondRow = 'Episode ' + poster.details.Episode;
-
-            let root = document.documentElement;
-            root.style.setProperty('--width', window.getComputedStyle(document.documentElement).getPropertyValue('--width-horizontal'));
-            root.style.setProperty('--height', window.getComputedStyle(document.documentElement).getPropertyValue('--height-horizontal'));
         }
 
-        posterDiv.insertAdjacentHTML('beforeend', '<br><h6 class="title">' + firstRow + '</h6>');
+        posterDiv.insertAdjacentHTML('beforeend', '<br><h6 class="' + titleClass + '">' + firstRow + '</h6>');
         posterDiv.insertAdjacentHTML('beforeend', '<span class="text-muted">' + secondRow + '</span>');
         posterListElement.appendChild(posterDiv);
     });
@@ -45,7 +55,7 @@ function showPosters(posterListElement, posters, urlPrefix) {
         let filler1 = document.createElement('div');
         filler1.setAttribute('class', 'filler1');
         let filler2 = document.createElement('div');
-        filler2.setAttribute('class', 'filler2');
+        filler2.setAttribute('class', filler2Class);
         filler1.appendChild(filler2);
         posterListElement.appendChild(filler1);
     }

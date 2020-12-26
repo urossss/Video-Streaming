@@ -1,7 +1,4 @@
 :root {
-    --width: 200px;
-    --height: 300px;
-
     --width-horizontal: 300px;
     --height-horizontal: 200px;
 
@@ -22,8 +19,15 @@
     cursor: pointer;
 }
 
-.poster-div .title {
-    width: var(--width);
+.title-horizontal {
+    width: var(--width-horizontal);
+    padding: 10px 5px 0px 5px;
+    color: white;
+    word-wrap: break-word;
+}
+
+.title-vertical {
+    width: var(--width-vertical);
     padding: 10px 5px 0px 5px;
     color: white;
     word-wrap: break-word;
@@ -34,9 +38,15 @@
     opacity: 0.6;
 }
 
-.poster-img {
-    width: var(--width);
-    height: var(--height);
+.poster-img-vertical {
+    width: var(--width-vertical);
+    height: var(--height-vertical);
+    object-fit: cover;
+}
+
+.poster-img-horizontal {
+    width: var(--width-horizontal);
+    height: var(--height-horizontal);
     object-fit: cover;
 }
 
@@ -44,8 +54,12 @@
     padding: 15px 15px 15px 15px;
 }
 
-.filler2 {
-    width: var(--width);
+.filler2-vertical {
+    width: var(--width-vertical);
+}
+
+.filler2-horizontal {
+    width: var(--width-horizontal);
 }
 
 .custom-container {

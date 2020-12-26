@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
             }
 
             let details = res.details;
-            console.log(details);
 
             let titleElement = document.getElementById('title');
             titleElement.insertAdjacentHTML('beforeend', details.title + '&nbsp');
@@ -68,6 +67,19 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 });
             }
             let posterListElement = document.getElementById('posterList');
-            showPosters(posterListElement, posters, document.URL + (document.URL[document.URL.length - 1] == '/' ? '' : '/'));
+            let urlParts = document.URL.split('/');
+            let urlPrefix = '/' + urlParts[3] + '/' + urlParts[4] + '/';
+            showPosters(posterListElement, posters, urlPrefix);
+
+            /**** Saving the lightweight version of the page (tv-show.html) ****/
+            // let page = $("html").html();
+            // let ind = page.indexOf('</head>');
+            // let head = page.substr(0, ind + 7);
+            // let body = page.substr(ind + 7);
+            // body = body.replace(/href="/g, 'href="/lightweight');
+            // page = head + '\n' + body;
+            // let blob = new Blob([page], { type: "text/html;charset=utf-8" });
+            // let parts = document.URL.split('/');
+            // saveAs(blob, parts[parts.length - 1]);
         });
 });
