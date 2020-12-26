@@ -221,6 +221,7 @@ const tvshowList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
                                 fs.writeFileSync(episodesPath, JSON.stringify(episodesData));
                                 data.details = generalData;
                                 data.hasDetails = true;
+                                tvshowEpisodes[url] = episodesData;
                             }
                         });
                     }
@@ -531,7 +532,7 @@ app.get('/video/:path', (req, res) => {
     const fileSize = stat.size;
     const range = req.headers.range;
     if (range) {
-        const CHUNK_SIZE = 2000000; // 2MB
+        const CHUNK_SIZE = 5 * 1024 * 1024; // 2MB
         const parts = range.replace(/bytes=/, '').split('-');
         const start = parseInt(parts[0], 10);
         const end = parts[1] != '' ? parseInt(parts[1], 10) : Math.min(start + CHUNK_SIZE - 1, fileSize - 1);
