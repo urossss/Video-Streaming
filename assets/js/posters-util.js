@@ -1,6 +1,10 @@
 function showPosters(posterListElement, posters, urlPrefix) {
     var filler2Class;
     posters.forEach(poster => {
+        if (!poster || !poster.details) {
+            return;
+        }
+
         let posterDiv = document.createElement('a');
         posterDiv.setAttribute('class', 'poster-div');
         if (poster.url != undefined) {

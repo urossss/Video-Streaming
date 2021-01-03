@@ -4,7 +4,7 @@ const imdb = require('imdb-api');
 const fetch = require('node-fetch');
 
 const app = express();
-const port = 3000;
+const port = process.env.port || 3000;
 
 const { config } = require('./config.js');
 
@@ -127,8 +127,6 @@ const movieList = fs.readdirSync(moviesRoot, { withFileTypes: true })
         return data;
     });
 
-console.log('\n\nEND\n\n');
-
 let tvshowIndexMap = [];
 let tvshowIndex = 0;
 
@@ -234,8 +232,6 @@ const tvshowList = fs.readdirSync(tvshowsRoot, { withFileTypes: true })
         return data;
     });
 
-// console.log(tvshowList);
-// console.log(tvshowEpisodes);
 
 if (subtitlesConvertList.length > 0) {
     console.log('Starting conversion for ' + subtitlesConvertList.length + ' subtitles');
